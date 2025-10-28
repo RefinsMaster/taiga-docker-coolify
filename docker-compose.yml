@@ -1,6 +1,6 @@
 version: "3.5"
 
-x-environment:
+x-environment: &default-back-environment
   # These environment variables will be used by taiga-back and taiga-async.
   # Database settings
   POSTGRES_DB: "taiga"
@@ -28,8 +28,8 @@ x-environment:
   ENABLE_TELEMETRY: "${ENABLE_TELEMETRY}"
   # ...your customizations go here
 
-x-volumes:
-  # These volumens will be used by taiga-back and taiga-async.
+x-volumes: &default-back-volumes
+  # These volumes will be used by taiga-back and taiga-async.
   - taiga-static-data:/taiga-back/static
   - taiga-media-data:/taiga-back/media
   # - ./config.py:/taiga-back/settings/config.py
@@ -103,8 +103,6 @@ services:
       # ...your customizations go here
     networks:
       - taiga
-    # volumes:
-    #   - ./conf.json:/usr/share/nginx/html/conf.json
 
   taiga-events:
     image: taigaio/taiga-events:latest
@@ -142,7 +140,7 @@ services:
   taiga-gateway:
     image: nginx:1.19-alpine
     volumes:
-      - ./taiga-gateway/taiga.conf:/etc/nginx/conf.d/default.conf  # <-- ADICIONE ESTA LINHA DE VOLTA
+      - ./taiga-gateway/taiga.conf:/etc/nginx/conf.d/default.conf
       - taiga-static-data:/taiga/static
       - taiga-media-data:/taiga/media
     networks:
@@ -152,8 +150,9 @@ services:
       - taiga-back
       - taiga-events
     labels:
-      - "coolify.fqdn=https://taiga.refins.com.br"  # <-- SUBSTITUA PELO SEU DOMÍNIO
-      - "coolify.port=80"                           # <-- A porta INTERNA do Nginx
+      - "coolify.fqdn=taiga.refins.com.br"
+      - "coolify.port=80"
+
 volumes:
   taiga-static-data:
   taiga-media-data:
