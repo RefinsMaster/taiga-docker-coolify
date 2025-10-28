@@ -153,7 +153,9 @@ services:
       - taiga-front
       - taiga-back
       - taiga-events
-
+    labels:
+      - "coolify.fqdn=https://taiga.seu-dominio.com"  # <-- SUBSTITUA PELO SEU DOMÍNIO
+      - "coolify.port=80"                           # <-- A porta INTERNA do Nginx
 volumes:
   taiga-static-data:
   taiga-media-data:
